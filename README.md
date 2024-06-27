@@ -14,13 +14,13 @@ Open .env.local in your text editor and fill out the variables
 
 ### Run migrations:
 ```bash
-\\ update the database schema to the latest version
+# update the database schema to the latest version
 pnpm migrate latest
-\\ run the next migration that has not yet been run 
+# run the next migration that has not yet been run 
 pnpm migrate up 
-\\ undo the last/specified migration that was run 
+# undo the last/specified migration that was run 
 pnpm migrate down
-\\ view all migration commands
+# view all migration commands
 pnpm migrate
 ```
 

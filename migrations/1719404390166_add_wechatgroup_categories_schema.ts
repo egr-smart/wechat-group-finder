@@ -3,20 +3,21 @@ import type { Kysely } from 'kysely'
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('wechat_group')
-    .addColumn('id', 'integer', (col) => col.primaryKey())
+    .addColumn('id', 'serial', (col) => col.primaryKey())
     .addColumn('name', 'text', (col) => col.notNull())
+    .addColumn('wechat_id', 'text', (col) => col.notNull())
     .addColumn('description', 'text')
     .execute()
 
   await db.schema
     .createTable('category')
-    .addColumn('id', 'integer', (col) => col.primaryKey())
+    .addColumn('id', 'serial', (col) => col.primaryKey())
     .addColumn('name', 'text', (col) => col.notNull().unique())
     .execute()
 
   await db.schema
     .createTable('wechat_group_category')
-    .addColumn('id', 'integer', (col) => col.primaryKey())
+    .addColumn('id', 'serial', (col) => col.primaryKey())
     .addColumn('wechat_group_id', 'integer', (col) =>
       col.references('wechat_group.id').onDelete('cascade').notNull(),
     )

@@ -7,20 +7,28 @@ import { Button } from "@/components/ui/button"
 
 import { useState } from 'react';
 
-const AddGroupForm = () => {
-  const [groupName, setGroupName] = useState('');
-  const [wechatId, setWechatId] = useState('');
-  const [groupDescription, setGroupDescription] = useState('');
+import type { WechatGroup } from "@/lib/db/types"
+
+interface AddGroupFormProps {
+  group?: WechatGroup;
+  closeModal: () => void;
+}
+
+const AddGroupForm: React.FC<AddGroupFormProps> = ({ group, closeModal }) => {
+  const [groupName, setGroupName] = useState(group?.name || '');
+  const [wechatId, setWechatId] = useState(group?.wechat_id || '');
+  const [groupDescription, setGroupDescription] = useState(group?.description || '');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     
     const response = await fetch('/api/groups', {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        id: group?.id,
         groupName,
         wechatId,
         groupDescription,
@@ -29,6 +37,7 @@ const AddGroupForm = () => {
 
     if (response.ok) {
       console.log('Group saved successfully!');
+      closeModal();
     } else {
       console.error('Failed to save group');
     }

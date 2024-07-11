@@ -41,6 +41,18 @@ const Groups: React.FC = () => {
     }
   };
 
+  const deleteGroup = async (id: number) => {
+    const response = await fetch(`/api/groups?id=${id}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      console.log('Group deleted successfully!');
+      fetchGroups();
+    } else {
+      console.error('Failed to delete group');
+    }
+  }
 
   useEffect(() => {
     fetchGroups();
@@ -69,7 +81,7 @@ const Groups: React.FC = () => {
             </CardHeader>
             <CardFooter>
               <Button variant="outline" onClick={() => openModalWithGroup(group)}>Edit</Button>
-              <Button variant="destructive">Delete</Button>
+              <Button variant="destructive" onClick={() => deleteGroup(group.id)}>Delete</Button>
             </CardFooter>
           </Card>
         ))}

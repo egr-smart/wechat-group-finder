@@ -51,3 +51,23 @@ export async function GET() {
   }
 }
 
+export async function DELETE(req: NextRequest) {
+  const id = req.nextUrl.searchParams.get('id');
+  console.log(id);
+  try {
+    const result = await db
+      .deleteFrom('wechat_group')
+      .where('id', '=', Number(id))
+      .executeTakeFirst();
+
+    if (result) {
+      return NextResponse.json({ message: 'Group added successfully' }, { status: 200 });
+    } else {
+      return NextResponse.json({ message: 'Group not found'}, { status: 404 });
+    }
+
+  } catch (error) {
+    console.error('Error deleting group:', error);
+    return NextResponse.json({ message: 'Error deleting group' }, { status: 500 });
+  }
+}

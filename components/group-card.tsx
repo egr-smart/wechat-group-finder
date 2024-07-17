@@ -10,11 +10,12 @@ import { WechatGroup } from '@/lib/db/types';
 
 interface GroupCardProps {
   group: WechatGroup;
-  onEdit: (group: WechatGroup) => void;
-  onDelete: (id: number) => void;
+  onEdit: (group?: WechatGroup) => void;
+  onDelete: (id?: number) => void;
+  adminView: boolean;
 }
 
-const GroupCard: React.FC<GroupCardProps> = ({ group, onEdit, onDelete }) => {
+const GroupCard: React.FC<GroupCardProps> = ({ group, onEdit, onDelete, adminView }) => {
   return (
     <Card
       key={group.id}
@@ -23,10 +24,12 @@ const GroupCard: React.FC<GroupCardProps> = ({ group, onEdit, onDelete }) => {
       <CardHeader>
         <CardTitle>{group.name}</CardTitle>
       </CardHeader>
-      <CardFooter>
-        <Button variant="outline" onClick={() => onEdit(group)}>Edit</Button>
-        <Button variant="destructive" onClick={() => onDelete(group.id)}>Delete</Button>
-      </CardFooter>
+      {adminView && (
+        <CardFooter>
+          <Button variant="outline" onClick={() => onEdit(group)}>Edit</Button>
+          <Button variant="destructive" onClick={() => onDelete(group.id)}>Delete</Button>
+        </CardFooter>
+      )}
     </Card>
   )
 }

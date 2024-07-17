@@ -5,12 +5,6 @@ import Modal from '@/components/modal';
 import { Button } from "@/components/ui/button"
 import AddGroupForm from "@/components/add-group-form"
 import GroupCard from '@/components/group-card'; 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from "@/components/ui/card"
 
 import type { WechatGroup } from "@/lib/db/types"
 
@@ -78,6 +72,7 @@ const Groups: React.FC = () => {
             group={group}
             onEdit={openModalWithGroup}
             onDelete={deleteGroup}
+            adminView={true}
           />
         ))}
       </div>

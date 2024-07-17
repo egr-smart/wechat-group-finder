@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from '@/components/modal';
 import { Button } from "@/components/ui/button"
 import AddGroupForm from "@/components/add-group-form"
+import GroupCard from '@/components/group-card'; 
 import {
   Card,
   CardHeader,
@@ -72,18 +73,12 @@ const Groups: React.FC = () => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 mt-6">
         {groups.map((group) => (
-        <Card
+          <GroupCard
             key={group.id}
-            className='w-64'
-          >
-            <CardHeader>
-              <CardTitle>{group.name}</CardTitle>
-            </CardHeader>
-            <CardFooter>
-              <Button variant="outline" onClick={() => openModalWithGroup(group)}>Edit</Button>
-              <Button variant="destructive" onClick={() => deleteGroup(group.id)}>Delete</Button>
-            </CardFooter>
-          </Card>
+            group={group}
+            onEdit={openModalWithGroup}
+            onDelete={deleteGroup}
+          />
         ))}
       </div>
     </div>

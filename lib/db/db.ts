@@ -1,7 +1,8 @@
 import { Database } from "./types";
 import { Pool } from "pg";
-import { Kysely, PostgresDialect } from "kysely";
+import { PostgresDialect } from "kysely";
 import dotenv from 'dotenv';
+import { KyselyAuth } from "@auth/kysely-adapter";
 
 dotenv.config({ path: '.env.local' });
 
@@ -17,6 +18,6 @@ const dialect = new PostgresDialect({
 });
 
 export { dialect };
-export const db = new Kysely<Database>({
+export const db = new KyselyAuth<Database>({
   dialect,
 });

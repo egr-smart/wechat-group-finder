@@ -14,6 +14,8 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 
+import { useSession } from "next-auth/react";
+
 import {
   Command,
   CommandEmpty,
@@ -60,6 +62,8 @@ const components: { title: string; href: string; description: string }[] = [
 ]
 
 export function MainNav() {
+  const { data: session, status } = useSession()
+
   return (
     <NavigationMenu>
       <NavigationMenuList>
@@ -70,13 +74,15 @@ export function MainNav() {
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/groups" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Groups 
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+        {status === "authenticated" && (
+          <NavigationMenuItem>
+            <Link href="/groups" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Groups 
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        )}
       </NavigationMenuList>
     </NavigationMenu>
   )

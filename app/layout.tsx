@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
-import { MainNav } from "@/components/main-nav"
+import { MainNav } from "@/components/main-nav";
+import { Providers } from "./providers";
 
 import { cn } from "@/lib/utils"
 
@@ -28,8 +29,10 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <MainNav />
-        {children}
+        <Providers>
+          <MainNav />
+          {children}
+        </Providers>
       </body>
     </html>
   );

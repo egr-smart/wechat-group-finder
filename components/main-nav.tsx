@@ -83,6 +83,13 @@ export function MainNav() {
             </Link>
           </NavigationMenuItem>
         )}
+        <NavigationMenuItem>
+          <Link href={status === 'authenticated' ? "/api/auth/signout" : "/api/auth/signin"} legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Log{status === 'authenticated' ? 'out' : 'in'} 
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
   )

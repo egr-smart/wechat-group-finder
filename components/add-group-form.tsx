@@ -21,8 +21,8 @@ const AddGroupForm: React.FC<AddGroupFormProps> = ({ group, closeModal }) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
-    const response = await fetch('/api/groups', {
+
+    const response = await fetch('/api/user/groups', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

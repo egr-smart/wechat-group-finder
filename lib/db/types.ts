@@ -19,6 +19,7 @@ export interface Database {
 
 export interface WechatGroupTable {
   id: Generated<number>
+  userId: string
   name: string
   wechat_id: string
   description: string

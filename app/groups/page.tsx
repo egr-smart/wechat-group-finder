@@ -5,11 +5,24 @@ import Modal from '@/components/modal';
 import { Button } from "@/components/ui/button"
 import AddGroupForm from "@/components/add-group-form"
 import GroupCard from '@/components/group-card'; 
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 import type { WechatGroup } from "@/lib/db/types"
 
 
 const Groups: React.FC = () => {
+  const { data: session, status } = useSession()
+  const router = useRouter()
+  
+  useEffect (() => {
+    if (status === "authenticated") {
+      fetchGroups(); 
+    }else if (status === "unauthenticated") {
+      router.push("/api/auth/signin")
+    }
+  }, [status, router]);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [groups, setGroups] = useState<WechatGroup[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<WechatGroup | null>(null);
@@ -28,7 +41,7 @@ const Groups: React.FC = () => {
 
   const fetchGroups = async () => {
     try {
-      const response = await fetch('/api/groups');
+      const response = await fetch('/api/user/groups');
       const data = await response.json();
       setGroups(data);
     } catch (error) {
@@ -37,7 +50,7 @@ const Groups: React.FC = () => {
   };
 
   const deleteGroup = async (id: number) => {
-    const response = await fetch(`/api/groups?id=${id}`, {
+    const response = await fetch(`/api/user/groups?id=${id}`, {
       method: 'DELETE',
     });
 
@@ -48,10 +61,6 @@ const Groups: React.FC = () => {
       console.error('Failed to delete group');
     }
   }
-
-  useEffect(() => {
-    fetchGroups();
-  }, []);
 
   return (
     <div className='max-w-fit mx-auto'>

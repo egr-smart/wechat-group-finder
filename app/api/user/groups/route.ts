@@ -1,17 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/db';
+import { getAuthSession } from "@/lib/authMiddleware"
+
+export async function GET() { 
+  try {
+    const session = await getAuthSession();
+
+    const groups = await db.selectFrom('wechat_group')
+                          .select(['id', 'name', 'wechat_id', 'description'])
+                          .where('userId', '=', session.user.id)
+                          .execute();
+
+    return NextResponse.json(groups);
+  } catch (error) {
+    console.error('Error fetching groups:', error);
+    return NextResponse.json({ error: 'Failed to fetch groups' }, { status: 500 });
+  }
+}
 
 export async function PUT(req: NextRequest) {
-  const { id, groupName, wechatId, groupDescription, userId } = await req.json();
+  const { id, groupName, wechatId, groupDescription } = await req.json();
 
   try {
+    const session = await getAuthSession();
     const existingGroup = await db
       .selectFrom('wechat_group')
       .select('id')
       .where('id', '=', id)
+      .where('userId', '=', session.user.id)
       .executeTakeFirst();
-
-    console.log(existingGroup);
 
     if (existingGroup != undefined) {
       await db
@@ -20,16 +37,17 @@ export async function PUT(req: NextRequest) {
           name: groupName,
           wechat_id: wechatId,
           description: groupDescription,
-          userId: userId,
+          userId: session.user.id,
         })
         .where('id', '=', id)
+        .where('userId', '=', session.user.id)
         .executeTakeFirst();
     } else {
       await db.insertInto('wechat_group').values({
         name: groupName,
         wechat_id: wechatId,
         description: groupDescription,
-        userId: userId,
+        userId: session.user.id,
       }).execute();
     }
 
@@ -40,26 +58,14 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function GET() {
-  try {
-    const groups = await db.selectFrom('wechat_group')
-                          .select(['name', 'wechat_id', 'description'])
-                          .execute();
-
-    return NextResponse.json(groups);
-  } catch (error) {
-    console.error('Error fetching groups:', error);
-    return NextResponse.json({ error: 'Failed to fetch groups' }, { status: 500 });
-  }
-}
-
 export async function DELETE(req: NextRequest) {
   const id = req.nextUrl.searchParams.get('id');
-  console.log(id);
   try {
+    const session = await getAuthSession();
     const result = await db
       .deleteFrom('wechat_group')
       .where('id', '=', Number(id))
+      .where('userId', '=', session.user.id)
       .executeTakeFirst();
 
     if (result) {
